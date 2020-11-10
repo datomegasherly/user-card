@@ -10,7 +10,7 @@ export class Filter extends Component {
     }
     render() {
         return (
-            <div className="container mt-2" data-test="filter-component">
+            <div className="mt-2" data-test="filter-component">
                 <div className="row">
                     <div className="col-4">
                         <input className="form-control" data-test="search-input" type="text" onChange={this.updateSearch} placeholder="Type to Search User" />
