@@ -33,7 +33,12 @@ const userReducer = (state = {}, action) => {
  * @param {object} action 
  */
 const usersReducer = (state = [], action) => {
-    return state;
+    switch(action.type){
+        case actionTypes.USER_LIST:
+            return action.payload;
+        default:
+            return state;
+    }
 }
 export default combineReducers({
     search: searchReducer,
