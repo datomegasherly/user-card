@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getUsers } from '../actions';
 import Filter from './Filter';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export class App extends Component {
+    componentDidMount(){
+        let { getUsers } = this.props;
+        getUsers();
+    }
     render() {
         return (
             <div data-test="app-component">
@@ -16,4 +22,4 @@ export class App extends Component {
     }
 }
 
-export default App;
+export default connect(null, { getUsers })(App);
