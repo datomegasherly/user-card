@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getUsers } from '../actions';
 import Filter from './Filter';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Users from './Users';
 
 export class App extends Component {
     componentDidMount(){
@@ -16,6 +17,7 @@ export class App extends Component {
                     <h3 >User Card</h3>
                     <hr className="divider py-1 bg-light" />
                     <Filter />
+                    <Users />
                 </div>
             </div>
         )
