@@ -23,8 +23,28 @@ const getUsers = () => {
         });
     }
 }
+/**
+ * get selected user to use in details and edit modes
+ * @param {int} userId 
+ */
+const getUser = userId => {
+    return (dispatch, getState) => {
+        let { users } = getState();
+        let payload = users.find(user => user.id == userId); // find selected user by userId variable
+        if(!payload){
+            payload = {
+                id: -1 // user not found
+            }
+        }
+        dispatch({
+            type: actionTypes.SELECT_USER,
+            payload
+        });
+    }
+}
 
 export {
     searchUser,
-    getUsers
+    getUsers,
+    getUser
 }
