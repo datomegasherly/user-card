@@ -11,7 +11,7 @@ class Users extends Component {
                 {
                     users && users.length && users.map(user => {
                         return (
-                            <div key={user.username} className="col-xs-12 col-sm-6 col-md-4 col-lg-3 pt-2 pr-1 pl-1">
+                            <div data-test="user-box-component" key={user.username} className="col-xs-12 col-sm-6 col-md-4 col-lg-3 pt-2 pr-1 pl-1">
                                 <div className="card h6">
                                     <div className="card-header pl-1 pr-2">
                                         <svg width="1.25em" height="1.25em" viewBox="0 0 16 16" className="bi bi-award" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
