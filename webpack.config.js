@@ -6,7 +6,8 @@ module.exports = {
   entry: ['@babel/polyfill', path.join(__dirname, "src", "index.js")],
   output: {
     path: path.join(__dirname, "build"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: "/"
   },
   module: {
     rules: [
@@ -33,6 +34,9 @@ module.exports = {
         ]
       }
     ]
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
