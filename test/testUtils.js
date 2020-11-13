@@ -8,7 +8,10 @@ import rootReducer from '../src/reducers';
  * @function storeFactory Set store for test purposes
  * @returns {Store} Redux store
  */
-export const storeFactory = () => {
+export const storeFactory = (state = false) => {
+    if(state){
+        return createStore(rootReducer, state, applyMiddleware(thunk));
+    }
     return createStore(rootReducer, applyMiddleware(thunk));
 }
 /**
