@@ -35,6 +35,10 @@ class Users extends Component {
                                         <div>Phone :</div>
                                         <div className="float-right"><b>{user.phone}</b></div>
                                     </div>
+                                    <div className="text-right">
+                                        <Link to={`/user/edit/${user.id}`}><button className="ml-2 mb-2 btn btn-warning btn-sm">Edit</button></Link>
+                                        <Link to={`/user/delete/${user.id}`}><button className="ml-2 mr-2 mb-2 btn btn-danger btn-sm">Delete</button></Link>
+                                    </div>
                                 </div>
                             </div>
                         )
