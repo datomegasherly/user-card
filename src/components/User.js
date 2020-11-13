@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getUser } from '../actions';
 import { Link } from 'react-router-dom';
@@ -41,15 +41,47 @@ class User extends Component {
         return (
             <div data-test="user-component">
                 <div className="text-left">
-                    <Link to="/"><button className="btn btn-danger">Back</button></Link>
+                    <Link to="/"><button className="btn btn-info">Back</button></Link>
+                    {
+                        (!user || (user && !user.username)) ? '' :
+                        <Fragment>
+                            <Link to={`/user/edit/${user.id}`}><button className="ml-2 btn btn-warning">Edit</button></Link>
+                            <Link to={`/user/delete/${user.id}`}><button className="ml-2 btn btn-danger">Delete</button></Link>
+                        </Fragment>
+                    }
                 </div>
                 {
                     (!user || (user && !user.username)) ?
-                        <div className="text-center">
-                            No User Selected
-                        </div> :
-                        <div>
-                            UserName : {user.username}
+                        <div data-test="no-user-selected" className="text-center mt-3">No User Selected</div> :
+                        <div data-test="user-selected" className="card h6 mt-3">
+                            <div className="card-header pl-1">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" d="M6 12.796L11.481 8 6 3.204v9.592zm.659.753l5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                                </svg>
+                                <span className="pl-1">{user.username}</span>
+                            </div>
+                            <div className="card-body row">
+                                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3 row">
+                                    <div className="mr-2">Name :</div>
+                                    <div><b>{user.name}</b></div>
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3 row">
+                                    <div className="mr-2">Phone :</div>
+                                    <div><b>{user.phone}</b></div>
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3 row">
+                                    <div className="mr-2">Website :</div>
+                                    <div><b>{user.website}</b></div>
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3 row">
+                                    <div className="mr-2">Email :</div>
+                                    <div><b>{user.email}</b></div>
+                                </div>
+                                <div className="col-12 row">
+                                    <div className="mr-2">Address :</div>
+                                    <div><b>{user.address.city}, {user.address.street}, {user.address.suite},  {user.address.zipcode}</b></div>
+                                </div>
+                            </div>
                         </div>
                 }
             </div>
