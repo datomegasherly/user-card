@@ -20,6 +20,7 @@ export class App extends Component {
                         <h3 >User Card</h3>
                         <hr className="divider py-1 bg-light" />
                         <Switch>
+                            <Route path="/user/:type/:userId" component={User}></Route>
                             <Route path="/user/:userId" component={User}></Route>
                             <Route path="/">
                                 <Filter />
