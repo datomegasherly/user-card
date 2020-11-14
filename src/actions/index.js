@@ -24,6 +24,31 @@ const getUsers = () => {
     }
 }
 /**
+ * update user after edit
+ * @param {object} user 
+ */
+const editUser = user => {
+    return (dispatch, getState) => {
+        let state = getState();
+        state.users.map(u => {
+            if(u.id == user.id){
+                u.name = user.name;
+                u.website = user.website;
+                u.phone = user.phone;
+                u.email = user.email;
+                u.address.city = user.address.city;
+                u.address.street = user.address.street;
+                u.address.suite = user.address.suite;
+                u.address.zipcode = user.address.zipcode;
+            }
+        });
+        dispatch({
+            type: actionTypes.EDIT_USER,
+            payload: state.users
+        });
+    }
+}
+/**
  * get selected user to use in details and edit modes
  * @param {int} userId 
  */
@@ -46,5 +71,6 @@ const getUser = userId => {
 export {
     searchUser,
     getUsers,
-    getUser
+    getUser,
+    editUser
 }
