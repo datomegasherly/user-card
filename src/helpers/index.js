@@ -51,7 +51,58 @@ const oneUserData = {
   }
 };
 
+/**
+ * will check validation of create and edit forms
+ * @param {object} data 
+ */
+const checkValidation = (data, type) => {
+  let error = '';
+  let isValid = true;
+  if(data.id == -1){
+    error = 'ID'
+    isValid = false;
+  }
+  if(isValid && type == 'create' && data.username == ''){
+    error = 'UserName'
+    isValid = false;
+  }
+  if(isValid && data.name == ''){
+    error = 'Name'
+    isValid = false;
+  }
+  if(isValid && data.website == ''){
+    error = 'WebSite'
+    isValid = false;
+  }
+  if(isValid && data.phone == ''){
+    error = 'Phone'
+    isValid = false;
+  }
+  if(isValid && data.email == ''){
+    error = 'Email'
+    isValid = false;
+  }
+  if(isValid && data.address.city == ''){
+    error = 'City'
+    isValid = false;
+  }
+  if(isValid && data.address.street == ''){
+    error = 'Street'
+    isValid = false;
+  }
+  if(isValid && data.address.suite == ''){
+    error = 'Suite'
+    isValid = false;
+  }
+  if(isValid && data.address.zipcode == ''){
+    error = 'ZipCode'
+    isValid = false;
+  }
+  return { isValid, error };
+}
+
 export {
     userData,
-    oneUserData
+    oneUserData,
+    checkValidation
 }
