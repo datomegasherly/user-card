@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { searchUser } from '../actions';
+import { Link } from 'react-router-dom';
 
 export class Filter extends Component {
     updateSearch = ev => {
@@ -17,7 +18,7 @@ export class Filter extends Component {
                         <input className="form-control" value={search} data-test="search-input" type="text" onChange={this.updateSearch} placeholder="Type to Search User" />
                     </div>
                     <div className="col-2 text-right">
-                        <button className="btn btn-success btn-block">Create</button>
+                        <Link to={`/user/create/new`}><button className="btn btn-success btn-block">Create</button></Link>
                     </div>
                 </div>
             </div>
