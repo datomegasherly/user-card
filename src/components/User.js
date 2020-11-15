@@ -2,6 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getUser, editUser } from '../actions';
 import { Link, Redirect } from 'react-router-dom';
+import { checkValidation } from '../helpers';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 
 class User extends Component {
     /**
@@ -66,15 +69,26 @@ class User extends Component {
      * @param {string} type it can be 'edit' or 'create'
      */
     saveUser(type){
-        switch(type){
-            case 'edit':
-                let { editUser } = this.props;
-                let { userState } = this.state;
-                editUser(userState);
-                this.setState({redirect: true});
-            case 'create':
-
-            break;
+        let { editUser } = this.props;
+        let { userState } = this.state;
+        let { isValid, error } = checkValidation(userState, type);
+        if(isValid){
+            switch(type){
+                case 'edit':
+                    editUser(userState);
+                    this.setState({redirect: true});
+                case 'create':
+                    
+                    this.setState({redirect: true});
+                break;
+            }
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: `Error in field ${error}`,
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
         }
     }
     updateInput = (ev) => {
@@ -159,7 +173,7 @@ class User extends Component {
                             {
                                 ((!user || (user && !user.username)) && type != 'create') ? '' :
                                 <Fragment>
-                                    <Link to={`/user/edit/${user.id}`}><button onClick={() => this.saveUser('edit')} className="ml-2 btn btn-success">Save</button></Link>
+                                    <Link to={`/user/${type}/${user.id ? user.id : 'new'}`}><button onClick={() => this.saveUser(type)} className="ml-2 btn btn-success">Save</button></Link>
                                 </Fragment>
                             }
                         </div>
