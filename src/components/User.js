@@ -9,7 +9,9 @@ class User extends Component {
      */
     state = {
         userLoaded: false, // use this variable in state to check if user is loaded
-        userState: {},
+        userState: {
+            id: -1
+        },
         redirect: false
     }
     /**
@@ -20,6 +22,23 @@ class User extends Component {
         const { users, getUser } = this.props;
         if(users.length){
             getUser(params.userId);
+        }
+        // set empty data when click on create user
+        if(params.type == 'create'){
+            this.setState({userState: {
+                id: 0,
+                username: '',
+                name: '',
+                phone: '',
+                website: '',
+                email: '',
+                address: {
+                    city: '',
+                    street: '',
+                    suite: '',
+                    zipcode: ''
+                }
+            }, userLoaded: true});
         }
     }
     /**
@@ -123,8 +142,9 @@ class User extends Component {
     }
     /**
      * this function will edit user data , when User Component is in edit mode
+     * @param {string} type will get type of user changes ( create / edit )
      */
-    editUser() {
+    editUser(type) {
         const user = this.state.userState;
         let { redirect } = this.state;
         let { updateInput } = this;
@@ -137,21 +157,30 @@ class User extends Component {
                         <div className="text-left">
                             <Link to="/"><button className="btn btn-info">Back</button></Link>
                             {
-                                (!user || (user && !user.username)) ? '' :
+                                ((!user || (user && !user.username)) && type != 'create') ? '' :
                                 <Fragment>
                                     <Link to={`/user/edit/${user.id}`}><button onClick={() => this.saveUser('edit')} className="ml-2 btn btn-success">Save</button></Link>
                                 </Fragment>
                             }
                         </div>
                         {
-                            (!user || (user && !user.username)) ?
+                            (!user || (user && user.id === -1)) ?
                                 <div data-test="no-user-selected" className="text-center mt-3">No User Selected</div> :
                                 <div data-test="user-selected" className="card h6 mt-3">
                                     <div className="card-header pl-1">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fillRule="evenodd" d="M6 12.796L11.481 8 6 3.204v9.592zm.659.753l5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
-                                        </svg>
-                                        <span className="pl-1">{user.username}</span>
+                                        {
+                                            type == 'edit' ?
+                                                <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fillRule="evenodd" d="M6 12.796L11.481 8 6 3.204v9.592zm.659.753l5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                                                </svg> : ''
+                                        }
+                                        {
+                                                type == 'edit' ? <span className="pl-1">{user.username}</span> :
+                                                <div className="container row">
+                                                    <div><label htmlFor="username" className="mt-2 mr-2">User Name : </label></div>
+                                                    <div><input id="username" className="form-control" onChange={updateInput} value={user.username} /></div>
+                                                </div>
+                                        }    
                                     </div>
                                     <div className="card-body row">
                                         <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3 row">
@@ -204,7 +233,7 @@ class User extends Component {
         return (
             <div data-test="user-component">
                 { (!params.type || (params.type && params.type == 'delete')) ? this.showUser() : '' }
-                { params.type && params.type == 'edit' ? this.editUser() : '' }
+                { params.type && (params.type == 'create' || params.type == 'edit') ? this.editUser(params.type) : '' }
             </div>
         )
     }
