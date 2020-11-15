@@ -9,11 +9,12 @@ export class Filter extends Component {
         searchUser(search);
     }
     render() {
+        let { search } = this.props;
         return (
             <div className="mt-2" data-test="filter-component">
                 <div className="row">
                     <div className="col-4">
-                        <input className="form-control" data-test="search-input" type="text" onChange={this.updateSearch} placeholder="Type to Search User" />
+                        <input className="form-control" value={search} data-test="search-input" type="text" onChange={this.updateSearch} placeholder="Type to Search User" />
                     </div>
                     <div className="col-2 text-right">
                         <button className="btn btn-success btn-block">Create</button>
