@@ -49,6 +49,21 @@ const editUser = user => {
     }
 }
 /**
+ * add new user to users reducer after create
+ * @param {object} user 
+ */
+const createUser = user => {
+    return (dispatch, getState) => {
+        let state = getState();
+        let users = state.users;
+        users.push(user);
+        dispatch({
+            type: actionTypes.CREATE_USER,
+            payload: users
+        });
+    }
+}
+/**
  * get selected user to use in details and edit modes
  * @param {int} userId 
  */
@@ -72,5 +87,6 @@ export {
     searchUser,
     getUsers,
     getUser,
-    editUser
+    editUser,
+    createUser
 }
