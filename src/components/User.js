@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { getUser, editUser } from '../actions';
+import { getUser, editUser, createUser } from '../actions';
 import { Link, Redirect } from 'react-router-dom';
 import { checkValidation } from '../helpers';
 import Swal from 'sweetalert2';
@@ -69,7 +69,7 @@ class User extends Component {
      * @param {string} type it can be 'edit' or 'create'
      */
     saveUser(type){
-        let { users, editUser } = this.props;
+        let { users, editUser, createUser } = this.props;
         let { userState } = this.state;
         let { isValid, error } = checkValidation(userState, type, users);
         if(isValid){
@@ -77,10 +77,11 @@ class User extends Component {
                 case 'edit':
                     editUser(userState);
                     this.setState({redirect: true});
+                    break;
                 case 'create':
-                    
+                    createUser(userState);
                     this.setState({redirect: true});
-                break;
+                    break;
             }
         } else {
             Swal.fire({
@@ -162,11 +163,14 @@ class User extends Component {
         const user = this.state.userState;
         let { redirect } = this.state;
         let { updateInput } = this;
+        let redirectURL = `/user/${user.id}`;
+        if(type == 'create') redirectURL = '/';
+        if(type == 'delete') redirectURL = '/';
         return (
             <Fragment>
             {
                 redirect ? 
-                    <Redirect to={`/user/${user.id}`} /> :
+                    <Redirect to={redirectURL} /> :
                     <Fragment>
                         <div className="text-left">
                             <Link to="/"><button className="btn btn-info">Back</button></Link>
@@ -261,4 +265,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { getUser, editUser })(User);
+export default connect(mapStateToProps, { getUser, editUser, createUser })(User);
