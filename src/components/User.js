@@ -69,9 +69,9 @@ class User extends Component {
      * @param {string} type it can be 'edit' or 'create'
      */
     saveUser(type){
-        let { editUser } = this.props;
+        let { users, editUser } = this.props;
         let { userState } = this.state;
-        let { isValid, error } = checkValidation(userState, type);
+        let { isValid, error } = checkValidation(userState, type, users);
         if(isValid){
             switch(type){
                 case 'edit':
