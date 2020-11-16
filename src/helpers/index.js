@@ -55,7 +55,7 @@ const oneUserData = {
  * will check validation of create and edit forms
  * @param {object} data 
  */
-const checkValidation = (data, type) => {
+const checkValidation = (data, type, users=[]) => {
   let error = '';
   let isValid = true;
   if(data.id == -1){
@@ -96,6 +96,20 @@ const checkValidation = (data, type) => {
   }
   if(isValid && data.address.zipcode == ''){
     error = 'ZipCode'
+    isValid = false;
+  }
+  /**
+   * check user id to exists , if user is in edit mode
+   */
+  if(isValid && type == 'edit' && !users.find(user => user.id == data.id)){
+    error = 'User';
+    isValid = false;
+  }
+  /**
+   * check username exist in create mode to users and if exist , it will return false
+   */
+  if(isValid && type == 'create' && users.find(user => user.username.toString().toLowerCase() == data.username.toString().toLowerCase())){
+    error = 'User';
     isValid = false;
   }
   return { isValid, error };
