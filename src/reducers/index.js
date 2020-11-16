@@ -35,8 +35,8 @@ const userReducer = (state = {}, action) => {
 const usersReducer = (state = [], action) => {
     switch(action.type){
         case actionTypes.USER_LIST:
-            return action.payload;
         case actionTypes.EDIT_USER:
+        case actionTypes.CREATE_USER:
             return action.payload;
         default:
             return state;
