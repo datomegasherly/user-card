@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getUser, editUser, createUser, deleteUser } from '../actions';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { checkValidation } from '../helpers';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -16,7 +16,8 @@ class User extends Component {
             id: -1
         },
         redirect: false,
-        delete: false, // this variable will set delete to true to prevent double show the user delete box
+        redirectTo: false, // use on deleteUser redirect
+        delete: false
     }
     /**
      * use componentDidMount when load User component from click on details button , not directly
@@ -58,9 +59,6 @@ class User extends Component {
         if(users.length && !userLoaded){
             this.setState({ userLoaded: true }, () => {
                 getUser(params.userId);
-                if(params.type == 'delete'){
-                    this.deleteUser();
-                }
             });
         }
         // update userState with selected user data just in edit mode
@@ -84,6 +82,7 @@ class User extends Component {
                     break;
                 case 'create':
                     createUser(userState);
+                    this.props.history.replace(`/`);
                     this.setState({redirect: true});
                     break;
             }
@@ -110,8 +109,8 @@ class User extends Component {
      */
     showUser() {
         const { user } = this.props;
-        let { redirect } = this.state;
-        let redirectURL = `/`;
+        let { redirect, redirectTo } = this.state;
+        let redirectURL = redirectTo ? redirectTo : `/`;
         return (
             redirect ? <Redirect to={redirectURL} /> :
             <Fragment>
@@ -180,7 +179,7 @@ class User extends Component {
                     <Redirect to={redirectURL} /> :
                     <Fragment>
                         <div className="text-left">
-                            <Link to="/"><button className="btn btn-info">Back</button></Link>
+                            <Link to={`/user/${user.id}`}><button className="btn btn-info">Back</button></Link>
                             {
                                 ((!user || (user && !user.username)) && type != 'create') ? '' :
                                 <Fragment>
@@ -256,27 +255,29 @@ class User extends Component {
     deleteUser(){
         let { match: { params } } = this.props;
         let { deleteUser } = this.props;
-        if(!this.state.delete){
-            this.setState({delete: true});
-            Swal.fire({
-                title: 'Are you sure to delete this user ?',
-                showCancelButton: true,
-                confirmButtonText: `Delete`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteUser({id: params.userId});
+        this.props.history.push(`/user/${params.userId}`);
+        Swal.fire({
+            title: 'Are you sure to delete this user ?',
+            showCancelButton: true,
+            confirmButtonText: `Delete`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteUser({id: params.userId});
+                this.setState({redirect: true});
+            } else {
+                this.setState({delete: false});
+                /*this.setState({redirectTo: `/user/${params.userId}`}, () => {
                     this.setState({redirect: true});
-                } else {
-                    this.setState({delete: false});
-                }
-            })
-        }
+                });*/
+            }
+        })
     }
     render() {
         const { match: { params } } = this.props;
         return (
             <div data-test="user-component">
                 { (!params.type || (params.type && params.type == 'delete')) ? this.showUser() : '' }
+                { (params.type && params.type == 'delete') ? this.deleteUser() : '' }
                 { params.type && (params.type == 'create' || params.type == 'edit') ? this.editUser(params.type) : '' }
             </div>
         )
@@ -291,4 +292,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { getUser, editUser, createUser, deleteUser })(User);
+export default withRouter(connect(mapStateToProps, { getUser, editUser, createUser, deleteUser })(User));
