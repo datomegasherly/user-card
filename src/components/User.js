@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { getUser, editUser, createUser } from '../actions';
+import { getUser, editUser, createUser, deleteUser } from '../actions';
 import { Link, Redirect } from 'react-router-dom';
 import { checkValidation } from '../helpers';
 import Swal from 'sweetalert2';
@@ -15,7 +15,8 @@ class User extends Component {
         userState: {
             id: -1
         },
-        redirect: false
+        redirect: false,
+        delete: false, // this variable will set delete to true to prevent double show the user delete box
     }
     /**
      * use componentDidMount when load User component from click on details button , not directly
@@ -57,6 +58,9 @@ class User extends Component {
         if(users.length && !userLoaded){
             this.setState({ userLoaded: true }, () => {
                 getUser(params.userId);
+                if(params.type == 'delete'){
+                    this.deleteUser();
+                }
             });
         }
         // update userState with selected user data just in edit mode
@@ -106,7 +110,10 @@ class User extends Component {
      */
     showUser() {
         const { user } = this.props;
+        let { redirect } = this.state;
+        let redirectURL = `/`;
         return (
+            redirect ? <Redirect to={redirectURL} /> :
             <Fragment>
             <div className="text-left">
                 <Link to="/"><button className="btn btn-info">Back</button></Link>
@@ -246,6 +253,25 @@ class User extends Component {
             </Fragment>
         )
     }
+    deleteUser(){
+        let { match: { params } } = this.props;
+        let { deleteUser } = this.props;
+        if(!this.state.delete){
+            this.setState({delete: true});
+            Swal.fire({
+                title: 'Are you sure to delete this user ?',
+                showCancelButton: true,
+                confirmButtonText: `Delete`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteUser({id: params.userId});
+                    this.setState({redirect: true});
+                } else {
+                    this.setState({delete: false});
+                }
+            })
+        }
+    }
     render() {
         const { match: { params } } = this.props;
         return (
@@ -265,4 +291,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { getUser, editUser, createUser })(User);
+export default connect(mapStateToProps, { getUser, editUser, createUser, deleteUser })(User);
