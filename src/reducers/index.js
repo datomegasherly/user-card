@@ -37,6 +37,7 @@ const usersReducer = (state = [], action) => {
         case actionTypes.USER_LIST:
         case actionTypes.EDIT_USER:
         case actionTypes.CREATE_USER:
+        case actionTypes.DELETE_USER:
             return action.payload;
         default:
             return state;
