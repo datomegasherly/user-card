@@ -1,5 +1,6 @@
 import actionTypes from '../actionTypes';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 /**
  * update search user text
@@ -46,6 +47,7 @@ const editUser = user => {
             type: actionTypes.EDIT_USER,
             payload: state.users
         });
+        Swal.fire('User Edited successfully', '', 'success');
     }
 }
 /**
@@ -61,6 +63,23 @@ const createUser = user => {
             type: actionTypes.CREATE_USER,
             payload: users
         });
+        Swal.fire('User Created successfully', '', 'success');
+    }
+}
+/**
+ * delete selected user
+ * @param {object} user 
+ */
+const deleteUser = user => {
+    return (dispatch, getState) => {
+        let state = getState();
+        let users = state.users;
+        let newUsers = users.filter(u => u.id != user.id);
+        dispatch({
+            type: actionTypes.DELETE_USER,
+            payload: newUsers
+        });
+        Swal.fire('User Deleted successfully', '', 'success');
     }
 }
 /**
@@ -88,5 +107,6 @@ export {
     getUsers,
     getUser,
     editUser,
-    createUser
+    createUser,
+    deleteUser
 }
