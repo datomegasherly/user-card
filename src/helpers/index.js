@@ -1,3 +1,6 @@
+import Joi from "joi";
+
+
 /**
  * use test data for moxios
  */
@@ -55,64 +58,29 @@ const oneUserData = {
  * will check validation of create and edit forms
  * @param {object} data 
  */
-const checkValidation = (data, type, users=[]) => {
-  let error = '';
+const checkValidation = (data) => {
   let isValid = true;
-  if(data.id == -1){
-    error = 'ID'
+  let err = '';
+  const schema = Joi.object({
+    id: Joi.number().greater(-1).max(10).required(),
+    username: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z0-9]{3,40}$')).required(),
+    name: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z ]{3,40}$')).required(),
+    phone: Joi.string().min(5).max(45).pattern(new RegExp('^[0-9+\-]{5,45}$')),
+    website: Joi.string().min(5).max(60).pattern(new RegExp('^(http:\\|https:\\|)(www.|)[a-zA-Z0-9\-_\.]{5,40}\.[a-zA-Z]{2,5}$')),
+    email: Joi.string().min(5).max(60).pattern(new RegExp('^[a-zA-Z0-9\-_\.]{2,40}@[a-zA-Z0-9\-_\.]{2,40}\.[a-zA-Z]{2,5}$')).required(),
+    address: Joi.object({
+       city: Joi.string().min(3).max(60).pattern(new RegExp('^[a-zA-Z ]{3,60}$')).required(),
+       street: Joi.string().min(3).max(60).pattern(new RegExp('^[a-zA-Z0-9\-_. ]{3,90}$')).required(),
+       suite: Joi.string().min(1).max(30).pattern(new RegExp('^[a-zA-Z0-9\-_. ]{1,30}$')),
+       zipcode: Joi.string().min(2).max(10).pattern(new RegExp('^[0-9\-]{2,10}$'))
+    }),
+  });
+  const { error, value } = schema.validate(data);
+  if(error){
+    err = error.details[0].message;
     isValid = false;
   }
-  if(isValid && type == 'create' && data.username == ''){
-    error = 'UserName'
-    isValid = false;
-  }
-  if(isValid && data.name == ''){
-    error = 'Name'
-    isValid = false;
-  }
-  if(isValid && data.website == ''){
-    error = 'WebSite'
-    isValid = false;
-  }
-  if(isValid && data.phone == ''){
-    error = 'Phone'
-    isValid = false;
-  }
-  if(isValid && data.email == ''){
-    error = 'Email'
-    isValid = false;
-  }
-  if(isValid && data.address.city == ''){
-    error = 'City'
-    isValid = false;
-  }
-  if(isValid && data.address.street == ''){
-    error = 'Street'
-    isValid = false;
-  }
-  if(isValid && data.address.suite == ''){
-    error = 'Suite'
-    isValid = false;
-  }
-  if(isValid && data.address.zipcode == ''){
-    error = 'ZipCode'
-    isValid = false;
-  }
-  /**
-   * check user id to exists , if user is in edit mode
-   */
-  if(isValid && type == 'edit' && !users.find(user => user.id == data.id)){
-    error = 'User';
-    isValid = false;
-  }
-  /**
-   * check username exist in create mode to users and if exist , it will return false
-   */
-  if(isValid && type == 'create' && users.find(user => user.username.toString().toLowerCase() == data.username.toString().toLowerCase())){
-    error = 'User';
-    isValid = false;
-  }
-  return { isValid, error };
+  return { isValid, error: err };
 }
 
 export {
