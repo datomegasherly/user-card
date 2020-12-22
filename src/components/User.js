@@ -46,6 +46,9 @@ class User extends Component {
             }, userLoaded: true});
         }
     }
+    checkValidationUser(user, userState, params){
+        return user.username && !userState.username && params.type && params.type == 'edit';
+    }
     /**
      * check if users data is loaded and userLoaded is still false , then change userLoaded to true and update selected user data
      * 
@@ -62,8 +65,19 @@ class User extends Component {
             });
         }
         // update userState with selected user data just in edit mode
-        if(user && user.username && userState && !userState.username && params.type && params.type == 'edit'){
+        if(this.checkValidationUser(user, userState, params)){
             this.setState({userState: user});
+        }
+    }
+    saveUserWhenIsValid({type, editUser, createUser, userState}){
+        switch(type){
+            case 'edit':
+                editUser(userState);
+                //this.setState({redirect: true});
+                break;
+            case 'create':
+                createUser(userState, this);
+                break;
         }
     }
     /**
@@ -71,28 +85,18 @@ class User extends Component {
      * @param {string} type it can be 'edit' or 'create'
      */
     saveUser(type){
-        let { users, editUser, createUser } = this.props;
+        let { editUser, createUser } = this.props;
         let { userState } = this.state;
-        let { isValid, error } = checkValidation(userState, type, users);
+        let { isValid, error } = checkValidation(userState);
         if(isValid){
-            switch(type){
-                case 'edit':
-                    editUser(userState);
-                    this.setState({redirect: true});
-                    break;
-                case 'create':
-                    createUser(userState);
-                    this.props.history.replace(`/`);
-                    this.setState({redirect: true});
-                    break;
-            }
+            this.saveUserWhenIsValid({type, editUser, createUser, userState});
         } else {
             Swal.fire({
                 title: 'Error!',
                 text: `Error in field ${error}`,
                 icon: 'error',
                 confirmButtonText: 'Ok'
-              })
+            });
         }
     }
     updateInput = (ev) => {
