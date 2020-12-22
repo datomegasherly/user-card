@@ -17,7 +17,7 @@ const searchUser = search => {
  */
 const getUsers = () => {
     return async(dispatch) => {
-        let users = await axios.get('https://jsonplaceholder.typicode.com/users');
+        let users = await axios.get('http://localhost:8002/usercard'); //https://jsonplaceholder.typicode.com/users
         dispatch({
             type: actionTypes.USER_LIST,
             payload: users && users.data ? users.data : []
@@ -54,16 +54,23 @@ const editUser = user => {
  * add new user to users reducer after create
  * @param {object} user 
  */
-const createUser = user => {
-    return (dispatch, getState) => {
+const createUser = (user, self) => {
+    return async(dispatch, getState) => {
         let state = getState();
         let users = state.users;
-        users.push(user);
-        dispatch({
-            type: actionTypes.CREATE_USER,
-            payload: users
-        });
-        Swal.fire('User Created successfully', '', 'success');
+        let createdUser = await axios.post('http://localhost:8002/usercard', user);
+        if(createdUser.data.error){
+            Swal.fire(createdUser.data.error, '', 'error');
+        } else {
+            users.push(user);
+            dispatch({
+                type: actionTypes.CREATE_USER,
+                payload: users
+            });
+            Swal.fire('User Created successfully', '', 'success');
+            self.props.history.replace(`/`);
+            self.setState({redirect: true});
+        }
     }
 }
 /**
