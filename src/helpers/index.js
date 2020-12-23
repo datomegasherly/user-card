@@ -62,11 +62,11 @@ const checkValidation = (data) => {
   let isValid = true;
   let err = '';
   const schema = Joi.object({
-    id: Joi.number().greater(-1).max(10).required(),
+    id: Joi.number().optional().allow('', null).greater(-1).max(10).required(),
     username: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z0-9]{3,40}$')).required(),
     name: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z ]{3,40}$')).required(),
-    phone: Joi.string().min(5).max(45).pattern(new RegExp('^[0-9+\-]{5,45}$')),
-    website: Joi.string().min(5).max(60).pattern(new RegExp('^(http:\\|https:\\|)(www.|)[a-zA-Z0-9\-_\.]{5,40}\.[a-zA-Z]{2,5}$')),
+    phone: Joi.string().optional().allow('', null).min(3).max(45).pattern(new RegExp('^[0-9+\-]{5,45}$')),
+    website: Joi.string().optional().allow('', null).min(5).max(60).pattern(new RegExp('^(http:\\|https:\\|)(www.|)[a-zA-Z0-9\-_\.]{5,40}\.[a-zA-Z]{2,5}$')),
     email: Joi.string().min(5).max(60).pattern(new RegExp('^[a-zA-Z0-9\-_\.]{2,40}@[a-zA-Z0-9\-_\.]{2,40}\.[a-zA-Z]{2,5}$')).required(),
     address: Joi.object({
        city: Joi.string().min(3).max(60).pattern(new RegExp('^[a-zA-Z ]{3,60}$')).required(),
