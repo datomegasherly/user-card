@@ -24,30 +24,38 @@ const getUsers = () => {
         });
     }
 }
+const updateUser = (user, state) => {
+    state.users.map(u => {
+        if(u.id == user.id){
+            u.name = user.name;
+            u.website = user.website;
+            u.phone = user.phone;
+            u.email = user.email;
+            u.address.city = user.address.city;
+            u.address.street = user.address.street;
+            u.address.suite = user.address.suite;
+            u.address.zipcode = user.address.zipcode;
+        }
+    });
+}
 /**
  * update user after edit
  * @param {object} user 
  */
 const editUser = user => {
-    return (dispatch, getState) => {
+    return async(dispatch, getState) => {
         let state = getState();
-        state.users.map(u => {
-            if(u.id == user.id){
-                u.name = user.name;
-                u.website = user.website;
-                u.phone = user.phone;
-                u.email = user.email;
-                u.address.city = user.address.city;
-                u.address.street = user.address.street;
-                u.address.suite = user.address.suite;
-                u.address.zipcode = user.address.zipcode;
-            }
-        });
-        dispatch({
-            type: actionTypes.EDIT_USER,
-            payload: state.users
-        });
-        Swal.fire('User Edited successfully', '', 'success');
+        let editedUser = await axios.put('http://localhost:8002/usercard', user);
+        if(editedUser.data.error){
+            Swal.fire(createdUser.data.error, '', 'error');
+        } else {
+            updateUser(user, state);
+            dispatch({
+                type: actionTypes.EDIT_USER,
+                payload: state.users
+            });
+            Swal.fire('User Edited successfully', '', 'success');
+        }
     }
 }
 /**
@@ -62,7 +70,7 @@ const createUser = (user, self) => {
         if(createdUser.data.error){
             Swal.fire(createdUser.data.error, '', 'error');
         } else {
-            users.push(user);
+            users.push(createdUser.data.data);
             dispatch({
                 type: actionTypes.CREATE_USER,
                 payload: users
@@ -96,7 +104,7 @@ const deleteUser = user => {
 const getUser = userId => {
     return (dispatch, getState) => {
         let { users } = getState();
-        let payload = users.find(user => user.id == userId); // find selected user by userId variable
+        let payload = users.find(user => user._id == userId); // find selected user by userId variable
         if(!payload){
             payload = {
                 id: -1 // user not found
