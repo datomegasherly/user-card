@@ -62,6 +62,7 @@ const checkValidation = (data) => {
   let isValid = true;
   let err = '';
   const schema = Joi.object({
+    _id: Joi.string().optional().allow('', null),
     id: Joi.number().optional().allow('', null).greater(-1).max(10).required(),
     username: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z0-9]{3,40}$')).required(),
     name: Joi.string().min(3).max(40).pattern(new RegExp('^[a-zA-Z ]{3,40}$')).required(),
