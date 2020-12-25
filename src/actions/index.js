@@ -45,7 +45,7 @@ const updateUser = (user, state) => {
 const editUser = user => {
     return async(dispatch, getState) => {
         let state = getState();
-        let editedUser = await axios.put('http://localhost:8002/usercard', user);
+        let editedUser = await axios.put(`http://localhost:8002/usercard/${user._id}`, user);
         if(editedUser.data.error){
             Swal.fire(createdUser.data.error, '', 'error');
         } else {
@@ -70,7 +70,7 @@ const createUser = (user, self) => {
         if(createdUser.data.error){
             Swal.fire(createdUser.data.error, '', 'error');
         } else {
-            users.push(createdUser.data.data);
+            users.push(createdUser.data.data[0]);
             dispatch({
                 type: actionTypes.CREATE_USER,
                 payload: users
@@ -86,15 +86,20 @@ const createUser = (user, self) => {
  * @param {object} user 
  */
 const deleteUser = user => {
-    return (dispatch, getState) => {
+    return async(dispatch, getState) => {
         let state = getState();
         let users = state.users;
-        let newUsers = users.filter(u => u.id != user.id);
-        dispatch({
-            type: actionTypes.DELETE_USER,
-            payload: newUsers
-        });
-        Swal.fire('User Deleted successfully', '', 'success');
+        let deletedUser = await axios.delete(`http://localhost:8002/usercard/${user._id}`);
+        if(deletedUser.data.error){
+            Swal.fire(deletedUser.data.error, '', 'error');
+        } else {
+            let newUsers = users.filter(u => u._id != user._id);
+            dispatch({
+                type: actionTypes.DELETE_USER,
+                payload: newUsers
+            });
+            Swal.fire('User Deleted successfully', '', 'success');
+        }
     }
 }
 /**
