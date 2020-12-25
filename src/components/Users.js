@@ -21,7 +21,7 @@ class Users extends Component {
                                             </svg>
                                             <b> {user.username}</b>
                                             <div className="float-right">
-                                                <Link to={`/user/${user.id}`}><button className="btn btn-info btn-sm">Details</button></Link>
+                                                <Link to={`/user/${user._id}`}><button className="btn btn-info btn-sm">Details</button></Link>
                                             </div>
                                         </div>
                                         <div className="m-2">

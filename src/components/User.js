@@ -266,7 +266,7 @@ class User extends Component {
             confirmButtonText: `Delete`,
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteUser({id: params.userId});
+                deleteUser({_id: params.userId});
                 this.setState({redirect: true});
             } else {
                 this.setState({delete: false});
