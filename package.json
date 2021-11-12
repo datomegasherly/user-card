@@ -11,22 +11,22 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.1.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
     "babel-loader": "^8.1.0",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "check-prop-types": "^1.1.2",
-    "css-loader": "^5.0.0",
+    "css-loader": "^6.5.1",
     "enzyme": "^3.11.0",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "5.0.0-alpha.6",
-    "jest": "^26.6.1",
-    "mini-css-extract-plugin": "^1.2.1",
+    "html-webpack-plugin": "^5.0.0-alpha.6",
+    "jest": "^27.3.1",
+    "mini-css-extract-plugin": "^2.4.4",
     "moxios": "^0.4.0",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^10.0.4",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^12.3.0",
     "webpack": "^5.3.0",
-    "webpack-cli": "3.3.9",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
   },
   "scripts": {
     "start": "webpack --mode development",
@@ -35,16 +35,16 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "axios": "^0.21.0",
-    "bootstrap": "^4.5.3",
+    "axios": "^0.24.0",
+    "bootstrap": "^5.1.3",
     "joi": "^17.3.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
-    "react-router-dom": "^5.2.0",
+    "react-router": "^6.0.2",
+    "react-router-dom": "^6.0.2",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "sweetalert2": "^10.10.0"
+    "redux-thunk": "^2.3.0"
   }
 }
